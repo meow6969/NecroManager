@@ -8,6 +8,7 @@ namespace NecroManager;
 public class Mods
 {
     private List<Mod> _allMods;
+    private List<Mod> _erroredMods;
 
     private static Mods Instance { get; } = new Mods();
 
@@ -15,19 +16,28 @@ public class Mods
     {
         // TODO: add function to rescan mods folder
         // TODO: add ability to scan for mods without a mod.json (for custom mods and stuff)
+        List<List<Mod>> meow = ScanForMods();
+        _allMods = meow[0];
+        _erroredMods = meow[1];
+    }
 
-        _allMods = ScanForMods();
+    public static List<Mod> GetErroredMods()
+    {
+        return Instance._erroredMods;
     }
     
     // we do this because we cannot access Instance in the constructor
     public static void ScanForModsPublic()
     {
-        Instance._allMods = ScanForMods();
+        List<List<Mod>> meow = ScanForMods();
+        Instance._allMods = meow[0];
+        Instance._erroredMods = meow[1];
     }
 
-    private static List<Mod> ScanForMods()
+    private static List<List<Mod>> ScanForMods()
     {
-        List<Mod> _allMods = [];
+        List<Mod> allMods = [];
+        List<Mod> erroredMods = [];
         var modsPath = Path.Combine(Utils.GetInstallPath(), "mods");
 
         foreach (string gameModsDir in Directory.GetDirectories(modsPath))
@@ -52,28 +62,43 @@ public class Mods
             
             foreach (string modDir in Directory.GetDirectories(gameModsDir))
             {
-                string modJsonPath = Path.Combine(modDir, "mod.json");
-                if (!File.Exists(modJsonPath)) continue;
-            
-                Mod mod = ReadModJson(modJsonPath);
-
-                List<string> files = [];
-                foreach (string file in Directory.GetFiles(modDir, "*", SearchOption.AllDirectories))
+                try
                 {
-                    if (File.Exists(file) && file != modJsonPath) files.Add(file[modDir.Length..]);
-                }
+                    string modJsonPath = Path.Combine(modDir, "mod.json");
+                    if (!File.Exists(modJsonPath)) continue;
 
-                mod.Files = files;
-                mod.Game = gameCode;
-                mod.Path = modDir;
-                mod.RelativePath = modDir[gameModsDir.Length..].Replace('\\', '/');
-                if (Utils.GetGameConfig(gameCode).EnabledMods.Contains(mod.Path)) mod.Enabled = true;
-                else if (Utils.GetGameConfig(gameCode).EnabledMods.Contains(mod.RelativePath)) mod.Enabled = true;
-                _allMods.Add(mod);
+                    Mod mod = ReadModJson(modJsonPath);
+
+                    List<string> files = [];
+                    foreach (string file in Directory.GetFiles(modDir, "*", SearchOption.AllDirectories))
+                    {
+                        if (File.Exists(file) && file != modJsonPath) files.Add(file[modDir.Length..]);
+                    }
+
+                    mod.Files = files;
+                    mod.Game = gameCode;
+                    mod.Path = modDir;
+                    mod.RelativePath = modDir[gameModsDir.Length..].Replace('\\', '/');
+                    if (Utils.GetGameConfig(gameCode).EnabledMods.Contains(mod.Path)) mod.Enabled = true;
+                    else if (Utils.GetGameConfig(gameCode).EnabledMods.Contains(mod.RelativePath)) mod.Enabled = true;
+                    allMods.Add(mod);
+                }
+                catch (Exception e)
+                {
+                    erroredMods.Add(new Mod
+                    {
+                        Path = modDir,
+                        Name = "",
+                        Version = "",
+                        Author = "",
+                        Description = "",
+                        Error = e
+                    });
+                }
             }
         }
 
-        return _allMods;
+        return [allMods, erroredMods];
     }
 
     public static void PreparePatchDirectory()
@@ -223,5 +248,6 @@ public class Mods
         public List<string> Files { get; set; } = [];
         public bool Enabled { get; set; }
         public string Game { get; set; } = "";
+        public Exception? Error { get; set; }
     } 
 }

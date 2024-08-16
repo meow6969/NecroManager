@@ -6,10 +6,12 @@
         x:Class="NecroManager.ErrorWindow"
         Title="Error!"
         Icon="./img/icon.png">
-    <StackPanel Background="Gray">
-        <StackPanel Margin="10">
-            <TextBlock Foreground="Red" Margin="0 5" FontSize="18" FontWeight="Bold">Error!</TextBlock>
-            <TextBlock Background="DimGray" Foreground="White" Name="ErrorMessage" />
+    <ScrollViewer AllowAutoHide="False">
+        <StackPanel Background="Gray">
+            <StackPanel Margin="10">
+                <TextBlock Foreground="Red" Margin="0 5" FontSize="18" FontWeight="Bold">Error!</TextBlock>
+                <TextBlock Background="DimGray" Foreground="White" Name="ErrorMessage" />
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </Window>

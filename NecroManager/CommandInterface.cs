@@ -201,6 +201,24 @@ public static class CommandInterface
                 Mods.SaveGameModsToConfig();
             }
         }
+
+        List<Mods.Mod> erroredMods = Mods.GetErroredMods();
+
+        if (erroredMods.Count > 0)
+        {
+            string errorMessage = "The following mods have errors!\n";
+            foreach (Mods.Mod erroredMod in erroredMods)
+            {
+                errorMessage += $"{erroredMod.Path}\n" +
+                                $"Exception: {erroredMod.Error!.Message}\n";
+            }
+            
+            Console.WriteLine(errorMessage);
+            Console.WriteLine("Would you like to continue? (Y/N)");
+            string? nya = Console.ReadLine();
+            if (nya == null) Environment.Exit(0);
+            if (nya.ToLower() != "y" || nya.ToLower() != "yes") Environment.Exit(0);
+        }
         
         Console.WriteLine("Patching game...");
         Utils.PatchExecutable();

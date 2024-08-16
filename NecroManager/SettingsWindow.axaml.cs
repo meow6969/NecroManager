@@ -19,6 +19,7 @@ public partial class SettingsWindow : Window
     // ReSharper disable once FieldCanBeMadeReadOnly.Local
     private MainWindow _mainWindow;
     
+    // the parameter here causes the SettingsWindow.axaml build warning even though this code runs fine
     public SettingsWindow(MainWindow mainWindow)
     {
         InitializeComponent();
@@ -154,6 +155,8 @@ public partial class SettingsWindow : Window
             checkBox.IsCheckedChanged += ModCheckChecked;
             MainPanel.Children.Add(checkBox);
         }
+        
+        HandleErroredMods();
     }
 
     private async void DecompileButton(object? source, RoutedEventArgs? args)
@@ -174,9 +177,7 @@ public partial class SettingsWindow : Window
 
         if (dirs.Count == 0)
         {
-            ErrorWindow errorWindow = new ErrorWindow("No directory selected.");
-            errorWindow.Closed += ErrorWindowClosed;
-            errorWindow.Show();
+            SpawnErrorWindow("No directory selected.");
             return;
         }
         string decompilePath = dirs[0].Path.LocalPath;
@@ -184,9 +185,7 @@ public partial class SettingsWindow : Window
         
         if (!Utils.IsDirectoryEmpty(decompilePath))
         {
-            ErrorWindow errorWindow = new ErrorWindow("Directory not empty.");
-            errorWindow.Closed += ErrorWindowClosed;
-            errorWindow.Show();
+            SpawnErrorWindow("Directory not empty.");
             return;
         }
 
@@ -227,6 +226,22 @@ public partial class SettingsWindow : Window
         Mods.ScanForModsPublic();
         AddContent();
     }
+
+    private void HandleErroredMods()
+    {
+        List<Mods.Mod> erroredMods = Mods.GetErroredMods();
+        string errorMessage = "The mods at the following paths have errors!\n";
+
+        if (erroredMods.Count == 0) return;
+        foreach (Mods.Mod mod in erroredMods)
+        {
+            errorMessage += $"{mod.Path}\n" +
+                            $"{mod.Error!.Message}\n" +
+                            $"\n";
+        }
+        
+        SpawnErrorWindow(errorMessage);
+    }
     
     private async void GameDirectoryButton(object? source, RoutedEventArgs? args)
     {
@@ -250,11 +265,8 @@ public partial class SettingsWindow : Window
         string executableName = Utils.GetOfficialName().Replace(":", string.Empty) + ".exe";
         if (files[0].Name != executableName)
         {
-            ErrorWindow errorWindow = new ErrorWindow($"Invalid executable name: {files[0].Name}\n" +
-                                                      $"Make sure to select \"{executableName}\"");
-            _subWindowsOpened++;
-            errorWindow.Closed += ErrorWindowClosed;
-            errorWindow.Show();
+            SpawnErrorWindow($"Invalid executable name: {files[0].Name}\n" +
+                             $"Make sure to select \"{executableName}\"");
             return;
         }
         
@@ -266,6 +278,14 @@ public partial class SettingsWindow : Window
         
         Utils.SetConfig(meow);
         AddContent();
+    }
+
+    private void SpawnErrorWindow(string errorMessage)
+    {
+        ErrorWindow errorWindow = new ErrorWindow(errorMessage);
+        _subWindowsOpened++;
+        errorWindow.Closed += ErrorWindowClosed;
+        errorWindow.Show();
     }
 
     private void ModCheckChecked(object? sender, RoutedEventArgs? args)
