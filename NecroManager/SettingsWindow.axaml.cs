@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -28,6 +29,7 @@ public partial class SettingsWindow : Window
         _mainWindow = mainWindow;
 
         Title = $"{Utils.GetOfficialName()} Settings";
+        Foreground = Brushes.White;
         Topmost = true;
         Width = 300;
         Height = 500;
@@ -46,6 +48,7 @@ public partial class SettingsWindow : Window
         MainPanel.Children.Add(new TextBlock
         {
             Text = "Settings",
+            Foreground = Brushes.White,
             FontSize = 30,
             HorizontalAlignment = HorizontalAlignment.Center
         });
@@ -53,12 +56,14 @@ public partial class SettingsWindow : Window
         MainPanel.Children.Add(new TextBlock
         {
             Text = Utils.GetOfficialName(), 
+            Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Center
         });
         
         Button gameDirectoryButton = new Button
         {
             Content = "Select Game Executable", 
+            Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             HorizontalContentAlignment = HorizontalAlignment.Center
         };
@@ -73,7 +78,8 @@ public partial class SettingsWindow : Window
             {
                 Text = errorText, 
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Foreground = Brushes.Red
+                Foreground = Brushes.Pink,
+                Background = Brushes.DarkRed,
             });
             return;
         }
@@ -81,6 +87,7 @@ public partial class SettingsWindow : Window
         Button decompileButton = new Button
         {
             Content = "Decompile game scripts", 
+            Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             HorizontalContentAlignment = HorizontalAlignment.Center
         };
@@ -97,6 +104,7 @@ public partial class SettingsWindow : Window
         Button modDirectoryButton = new Button
         {
             Content = "Open mods folder", 
+            Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             HorizontalContentAlignment = HorizontalAlignment.Center
         };
@@ -106,6 +114,7 @@ public partial class SettingsWindow : Window
         Button scanModsButton = new Button
         {
             Content = "Scan mods folder", 
+            Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             HorizontalContentAlignment = HorizontalAlignment.Center
         };
@@ -115,6 +124,7 @@ public partial class SettingsWindow : Window
         Button importModButton = new Button
         {
             Content = "Import zip mod", 
+            Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             HorizontalContentAlignment = HorizontalAlignment.Center
         };
@@ -123,18 +133,19 @@ public partial class SettingsWindow : Window
 
         MainPanel.Children.Add(new TextBlock
         {
-            FontStyle = FontStyle.Italic,
-            Text = "Grayed-out mods are incompatible with",
-            FontSize = 12,
+            Background = new SolidColorBrush(Color.FromArgb(0xff, 0x20, 0x20, 0x20)),
+            Text = "Grayed-out mods are incompatible",
+            FontSize = 16,
             Foreground = Brushes.Red,
             HorizontalAlignment = HorizontalAlignment.Center
         });
         MainPanel.Children.Add(new TextBlock
         {
-            FontStyle = FontStyle.Italic,
-            Text = "selected mods.",
-            FontSize = 12,
+            Background = new SolidColorBrush(Color.FromArgb(0xff, 0x20, 0x20, 0x20)),
+            Text = "with selected mods.",
+            FontSize = 16,
             Foreground = Brushes.Red,
+          
             HorizontalAlignment = HorizontalAlignment.Center
         });
         
@@ -149,7 +160,8 @@ public partial class SettingsWindow : Window
                     // Foreground = Brushes.LightGray,
                     VerticalAlignment = VerticalAlignment.Center,
                     FontSize = 15,
-                    Background = Brushes.DimGray
+                    Background = Brushes.DimGray,
+                    Foreground = Brushes.White
                 });
                 continue;
             }

@@ -7,7 +7,7 @@
         Title="Error!"
         Icon="./img/icon.png">
     <ScrollViewer AllowAutoHide="False">
-        <StackPanel Background="Gray">
+        <StackPanel Background="#303030">
             <StackPanel Margin="10">
                 <TextBlock Foreground="Red" Margin="0 5" FontSize="18" FontWeight="Bold">Error!</TextBlock>
                 <TextBlock Background="DimGray" Foreground="White" Name="ErrorMessage" />

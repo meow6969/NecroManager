@@ -10,7 +10,7 @@
                OpenPaneLength="200" 
                DisplayMode="CompactInline"
                Background="Purple"
-               PaneBackground="Gray"
+               PaneBackground="#303030"
                Name="MeowView">
         <SplitView.Pane>
             <StackPanel Orientation="Vertical">
@@ -18,7 +18,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" >
                             <Image Width="32" Source="./img/kr1.png" />
-                            <TextBlock FontSize="24" Text=" KR" />
+                            <TextBlock FontSize="24" Text=" KR" Foreground="White" />
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -26,7 +26,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" >
                             <Image Width="32" Source="./img/kr2.png" />
-                            <TextBlock FontSize="24" Text=" KR:Frontiers"/>
+                            <TextBlock FontSize="24" Text=" KR:Frontiers" Foreground="White" />
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -34,7 +34,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" >
                             <Image Width="32" Source="./img/kr3.png" />
-                            <TextBlock FontSize="24" FontFamily="FiraCodeFont" Text=" KR:Origins"/>
+                            <TextBlock FontSize="24" FontFamily="FiraCodeFont" Text=" KR:Origins" Foreground="White"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -42,7 +42,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" >
                             <Image Width="32" Source="./img/kr5.png" />
-                            <TextBlock FontSize="24" Text=" KR:Alliance" />
+                            <TextBlock FontSize="24" Text=" KR:Alliance" Foreground="White" />
                         </StackPanel>
                     </Button.Content>
                 </Button>

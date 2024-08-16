@@ -88,8 +88,8 @@ public partial class MainWindow : Window
 
         Button playButton = (Button)source!;
         playButton.Content = "Patching...";
-        playButton.Background = Brushes.Yellow;
-        playButton.Foreground = Brushes.Black;
+        playButton.Background = Brushes.Gray;
+        playButton.Foreground = Brushes.White;
         _subWindowsOpened++;
         await Utils.PatchExecutableAsync();
         Utils.SetReadyToStart();
@@ -126,16 +126,19 @@ public partial class MainWindow : Window
             HorizontalContentAlignment = HorizontalAlignment.Left,
             VerticalContentAlignment = VerticalAlignment.Top,
             Margin = new Thickness(16),
-            Background = Brushes.Gray
+            Background = new SolidColorBrush(Color.FromArgb(0xff, 0x30, 0x30, 0x30)),
+            Foreground = Brushes.White
         };
 
         Button playButton = new Button
         {
             Content = "Play",
-            FontSize = 72,
+            FontSize = 80,
+            Foreground = Brushes.White,
+            Background = new SolidColorBrush(Color.FromArgb(0xff, 0x30, 0x70, 0x30)),
             VerticalAlignment = VerticalAlignment.Bottom,
-            Margin = new Thickness(20),
-            Background = Brushes.Lime
+            Margin = new Thickness(35, 20),
+            
         };
         playButton.SetValue(Grid.RowProperty, 3);
         playButton.Click += PlayButtonClicked;
@@ -161,11 +164,12 @@ public partial class MainWindow : Window
         Button settingsButton = new Button
         {
             Content = "Settings",
-            FontSize = 72,
-            Background = Brushes.Gray,
+            FontSize = 40,
+            Foreground = Brushes.White,
+            Background = new SolidColorBrush(Color.FromArgb(0xff, 0x30, 0x30, 0x30)),
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Bottom,
-            Margin = new Thickness(220, 20)
+            Margin = new Thickness(235, 20)
         };
         settingsButton.SetValue(Grid.RowProperty, 3);
         settingsButton.Click += SettingsButtonClicked;

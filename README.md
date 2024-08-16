@@ -43,4 +43,4 @@
 
 # Credits
  * Lua decompiler made by [marsinator358](https://github.com/marsinator358/luajit-decompiler-v2)
- * Icon made by [Firstwitch](https://firstwitch.carrd.co/)
+ * Icon and some styling done by [Firstwitch](https://firstwitch.carrd.co/)
