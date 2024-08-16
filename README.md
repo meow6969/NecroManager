@@ -1,4 +1,4 @@
-# NecroManager
+# <img src="https://raw.githubusercontent.com/meow6969/NecroManager/master/NecroManager/img/icon.png" width="128"> NecroManager
   mod manager for love2d kingdom rush games  
   Named after best tower in the game necromancer
 
@@ -37,6 +37,9 @@
 # [DEVELOPING.md](https://github.com/meow6969/NecroManager/blob/master/DEVELOPING.md) - info for mod developers
 
 # Screenshots
+<img src="https://raw.githubusercontent.com/meow6969/NecroManager/master/screenshots/cli.png" alt="screenshot of CLI">
+<img src="https://raw.githubusercontent.com/meow6969/NecroManager/master/screenshots/mainmenu.png" alt="screenshot of main menu">  
+<img src="https://raw.githubusercontent.com/meow6969/NecroManager/master/screenshots/settingsmenu.png" alt="screenshot of settings menu">
 
 # Credits
  * Lua decompiler made by [marsinator358](https://github.com/marsinator358/luajit-decompiler-v2)
