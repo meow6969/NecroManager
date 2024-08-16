@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.IO.Compression;
+using System.Linq;
 
 namespace NecroManager;
 
@@ -228,6 +230,48 @@ public class Mods
 
         if (enabledMods.Length == 0) return;
         Console.WriteLine(enabledMods.Substring(0, enabledMods.Length - 2));
+    }
+    
+    public static void ImportModFromZip(string zipPath)
+    {
+        if (!Utils.IsUnix())
+        {
+            // for some reason on windows it puts a / before the drive letter and it messes everything up
+            if (zipPath[0] == '/' || zipPath[0] == '\\') zipPath = zipPath[1..];
+        }
+
+        string extractPath = Path.Combine(Path.GetTempPath(), "kingdomrush_zipmod");
+        if (Directory.Exists(extractPath)) Directory.Delete(extractPath, true);
+        ZipFile.ExtractToDirectory(zipPath, extractPath);
+        string modRootPath;
+        if (File.Exists(Path.Combine(extractPath, "mod.json")))
+        {
+            modRootPath = extractPath;
+        }
+        else
+        {
+            if (Directory.GetDirectories(extractPath).Length == 0) throw new Exception("Could not find mod.json");
+            string subPath = Directory.GetDirectories(extractPath)[0];
+            if (File.Exists(Path.Combine(subPath, "mod.json"))) modRootPath = subPath;
+            else throw new Exception("Could not find mod.json");
+        }
+
+        Mod mod = ReadModJson(Path.Combine(modRootPath, "mod.json"));
+        if (mod.Game == "") throw new Exception("mod.json does not have Game attribute");
+        string allModsPath = Path.Combine(Utils.GetInstallPath(), "mods", mod.Game);
+        string modRootName = Path.GetFileNameWithoutExtension(zipPath);
+        string installedModPath = Path.Combine(allModsPath, modRootName);
+        
+        if (!Directory.Exists(allModsPath)) throw new Exception("Invalid Game attribute in mod.json");
+        if (Directory.Exists(installedModPath))
+        {
+            Directory.Delete(installedModPath, true);
+            Directory.CreateDirectory(installedModPath);
+        }
+        // Console.WriteLine(allModsPath);
+        // Console.WriteLine(modRootPath);
+        // Console.WriteLine(installedModPath);
+        Utils.CopyAll(new DirectoryInfo(modRootPath), new DirectoryInfo(installedModPath));
     }
 
     private static Mod ReadModJson(string modJson)

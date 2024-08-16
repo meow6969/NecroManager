@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -110,6 +111,15 @@ public partial class SettingsWindow : Window
         };
         scanModsButton.Click += ScanModsButton;
         MainPanel.Children.Add(scanModsButton);
+        
+        Button importModButton = new Button
+        {
+            Content = "Import zip mod", 
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalContentAlignment = HorizontalAlignment.Center
+        };
+        importModButton.Click += ImportModButton;
+        MainPanel.Children.Add(importModButton);
 
         MainPanel.Children.Add(new TextBlock
         {
@@ -277,6 +287,40 @@ public partial class SettingsWindow : Window
         Utils.SetGameConfig(executablePath:files[0].Path.ToString()[7..]);
         
         Utils.SetConfig(meow);
+        AddContent();
+    }
+
+    private async void ImportModButton(object? source, RoutedEventArgs? args)
+    {
+        if (_subWindowsOpened > 0) return;
+        
+        _subWindowsOpened++;
+        var customZipFileType = new FilePickerFileType("Only zip files")
+        {
+            Patterns = new[] { "*.zip" },
+        };
+        
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = $"Select {Utils.GetOfficialName()} Executable",
+            AllowMultiple = false,
+            FileTypeFilter = new[] {customZipFileType}
+        });
+        _subWindowsOpened--;
+        
+        if (files.Count == 0) return;
+
+        try
+        {
+            Mods.ImportModFromZip(files[0].Path.LocalPath);
+        }
+        catch (Exception e)
+        {
+            SpawnErrorWindow($"Cannot import mod zip\n" +
+                             $"{e.Message}");
+        }
+        
+        Mods.ScanForModsPublic();
         AddContent();
     }
 

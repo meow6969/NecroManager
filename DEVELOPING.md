@@ -56,3 +56,5 @@ to for your mod:
    compatibility with other mods.
  * Only include scripts that are required for the mod, any scripts that
    are not different from the original game scripts should not be included.
+ * When packing your mod as a zip file, take note of the zip file name.
+   The name of the zip file will become the name of the mod's root folder

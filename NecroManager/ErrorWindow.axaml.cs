@@ -18,6 +18,7 @@ public partial class ErrorWindow : Window
         foreach (string word in errorMessage.Split(' '))
         {
             chars += word.Length;
+            if (word.Contains('\n')) chars = 0;
             if (chars >= charCap)
             {
                 chars = 0;
