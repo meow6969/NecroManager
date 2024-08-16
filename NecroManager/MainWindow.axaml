@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="NecroManager.MainWindow"
+        Title="NecroManager"
+        Icon="./img/icon.png">
+    <SplitView IsPaneOpen="true" 
+               OpenPaneLength="200" 
+               DisplayMode="CompactInline"
+               Background="Purple"
+               PaneBackground="Gray"
+               Name="MeowView">
+        <SplitView.Pane>
+            <StackPanel Orientation="Vertical">
+                <Button Width="300" Click="ButtonClicked" Name="Kr1">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" >
+                            <Image Width="32" Source="./img/kr1.png" />
+                            <TextBlock FontSize="24" Text=" KR" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Width="300" Click="ButtonClicked" Name="Kr2">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" >
+                            <Image Width="32" Source="./img/kr2.png" />
+                            <TextBlock FontSize="24" Text=" KR:Frontiers"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Width="300" Click="ButtonClicked" Name="Kr3">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" >
+                            <Image Width="32" Source="./img/kr3.png" />
+                            <TextBlock FontSize="24" FontFamily="FiraCodeFont" Text=" KR:Origins"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Width="300" Click="ButtonClicked" Name="Kr5">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" >
+                            <Image Width="32" Source="./img/kr5.png" />
+                            <TextBlock FontSize="24" Text=" KR:Alliance" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <StackPanel Name="KittyPanel">
+                <Grid Name="MeowGrid"
+                      ColumnDefinitions="480,400,800"
+                      Margin="4">
+            
+                    <!-- <Image Source="./img/vuekosmokingbluntweeddrugs.jpg" Stretch="Fill"/> -->
+                </Grid>
+            </StackPanel>
+        </SplitView.Content>
+    </SplitView>
+</Window>
+
