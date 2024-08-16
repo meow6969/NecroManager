@@ -14,7 +14,7 @@
 ### Windows
  * Install [7-Zip](https://www.7-zip.org/a/7z2408-x64.exe)
  * Install [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-aspnetcore-8.0.8-windows-x64-installer)
- * Download NecroManager from [Releases]()
+ * Download NecroManager from [Releases](https://github.com/meow6969/NecroManager/releases)
  * Extract NecroManager
  * Run NecroManager.exe
 
@@ -23,9 +23,9 @@
    * Ubuntu/Debian: `sudo apt install p7zip-full` 
    * Arch: `sudo pacman -S p7zip`
  * Install .NET 8.0 Runtime
-   * Ubuntu/Debian: [View Microsoft Docs](https://learn.microsoft.com/en-us/dotnet/core/install/linux-debian#debian-12)
+   * Ubuntu/Debian: [View Microsoft docs](https://learn.microsoft.com/en-us/dotnet/core/install/linux-debian#debian-12)
    * Arch: `sudo pacman -S dotnet-host dotnet-runtime aspnet-runtime`
-   * Download NecroManager from [Releases]()
+   * Download NecroManager from [Releases](https://github.com/meow6969/NecroManager/releases)
    * Extract NecroManager
    * Run NecroManger
 
@@ -34,7 +34,7 @@
  * Starting NecroManager with no arguments just starts the GUI
  * Use `h`, `-h`, or `--help` to view the help dialogue
 
-# [DEVELOPING.md]() - info for mod developers
+# [DEVELOPING.md](https://github.com/meow6969/NecroManager/blob/master/DEVELOPING.md) - info for mod developers
 
 # Screenshots
 
