@@ -13,15 +13,15 @@ mod
 ```
 In this example, every file here will be patched into the game executable,
 except for `mod.json`. `mod.json` contains the metadata for the mod that
-will be used by the launcher to initialize it.  
+will be used by NecroManager to initialize it.  
 The root folder for the game will be the root folder of the mod, so to
 patch the game file `Kingdom Rush Alliance/lib/middleclass.lua`,  
 just put the file in `mod/lib/middleclass.lua`.  
-An important thing to note is that you do not need to recompile your  
+An important thing to note is that you do not need to recompile your
 mod scripts for them to work in the game.
 
 # `mod.json` structure
-```
+```json
 {
   "Name": "MyMod",
   "Description": "Example Mod",
@@ -54,3 +54,5 @@ to for your mod:
    * Avoid characters like spaces and symbols (other than `-` and `_`)
  * Try patching as little files as you can, as this will help your mod's
    compatibility with other mods.
+ * Only include scripts that are required for the mod, any scripts that
+   are not different from the original game scripts should not be included.
