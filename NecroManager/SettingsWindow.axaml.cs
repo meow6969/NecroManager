@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Avalonia;
@@ -13,10 +14,16 @@ namespace NecroManager;
 public partial class SettingsWindow : Window
 {
     private int _subWindowsOpened;
+    // ReSharper disable once FieldCanBeMadeReadOnly.Local
+    private List<int> _weedTrack;
+    // ReSharper disable once FieldCanBeMadeReadOnly.Local
+    private MainWindow _mainWindow;
     
-    public SettingsWindow()
+    public SettingsWindow(MainWindow mainWindow)
     {
         InitializeComponent();
+        _weedTrack = [0, 0, 0];
+        _mainWindow = mainWindow;
 
         Title = $"{Utils.GetOfficialName()} Settings";
         Topmost = true;
@@ -151,7 +158,12 @@ public partial class SettingsWindow : Window
 
     private async void DecompileButton(object? source, RoutedEventArgs? args)
     {
-        if (_subWindowsOpened > 0) return;
+        if (_subWindowsOpened > 0)
+        {
+            _weedTrack[1]++;
+            CheckWeedMode();
+            return;
+        }
         _subWindowsOpened++;
         
         var dirs = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
@@ -167,8 +179,8 @@ public partial class SettingsWindow : Window
             errorWindow.Show();
             return;
         }
-        // substring(7) to remove file:// 
-        string decompilePath = dirs[0].Path.ToString()[7..];
+        string decompilePath = dirs[0].Path.LocalPath;
+        
         
         if (!Utils.IsDirectoryEmpty(decompilePath))
         {
@@ -181,15 +193,29 @@ public partial class SettingsWindow : Window
         Button decompileButton = (Button)source!;
         decompileButton.Content = "Decompiling...";
         decompileButton.Background = Brushes.Yellow;
+        decompileButton.Foreground = Brushes.Black;
         await Utils.DecompileGameAsync(decompilePath);
         _subWindowsOpened--;
         Utils.OpenFileManager(decompilePath);
         AddContent();
     }
 
+    private void CheckWeedMode()
+    {
+        if (_weedTrack[0] == 4 && _weedTrack[1] == 2 && _weedTrack[2] == 0)
+        {
+            _mainWindow.WeedMode();
+        }
+    }
+
     private void ModDirectoryButton(object? source, RoutedEventArgs? args)
     {
-        if (_subWindowsOpened > 0) return;
+        if (_subWindowsOpened > 0)
+        {
+            _weedTrack[2]++;
+            CheckWeedMode();
+            return;
+        }
 
         Utils.OpenFileManager(Path.Combine(Utils.GetInstallPath(), "mods"));
     }
@@ -204,7 +230,12 @@ public partial class SettingsWindow : Window
     
     private async void GameDirectoryButton(object? source, RoutedEventArgs? args)
     {
-        if (_subWindowsOpened > 0) return;
+        if (_subWindowsOpened > 0)
+        {
+            _weedTrack[0]++;
+            CheckWeedMode();
+            return;
+        }
 
         _subWindowsOpened++;
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions

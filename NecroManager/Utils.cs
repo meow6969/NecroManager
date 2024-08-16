@@ -219,6 +219,12 @@ public class Utils
 
     public static void SetGameConfig(string? executablePath = null, List<string>? enabledMods = null)
     {
+        if (!IsUnix() && executablePath != null)
+        {
+            // for some reason on windows it puts a / before the drive letter and it messes everything up
+            if (executablePath[0] == '/' || executablePath[0] == '\\') executablePath = executablePath[1..];
+        }
+        
         switch (Instance._game)
         {
             case "Kr1":
@@ -375,7 +381,7 @@ public class Utils
             {
                 WindowStyle = ProcessWindowStyle.Hidden,
                 FileName = luaDecompiler,
-                Arguments = $"\"{extractLocation}\" -o \"{decompileLocation}\" -e lua {forceOverwrite}"
+                Arguments = $"\"{extractLocation}\" -o \"{decompileLocation}\" -e lua -s {forceOverwrite}"
             };
         }
         
@@ -460,7 +466,7 @@ public class Utils
         Directory.SetCurrentDirectory(oldWorkingDirectory);
     }
 
-    private static bool IsUnix()
+    public static bool IsUnix()
     {
         return RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
     }

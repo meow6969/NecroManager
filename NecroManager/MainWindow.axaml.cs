@@ -13,6 +13,7 @@ public partial class MainWindow : Window
 {
     // private Window _settingsWindow;
     private int _subWindowsOpened;
+    private bool _weedMode;
     
     public MainWindow()
     {
@@ -26,6 +27,12 @@ public partial class MainWindow : Window
         CreateContent();
         Resized += OnResize;
         Initialized += WaitForInitialization;
+    }
+
+    public void WeedMode()
+    {
+        _weedMode = true;
+        CreateContent();
     }
 
     private void WaitForInitialization(object? sender, EventArgs e)
@@ -57,7 +64,7 @@ public partial class MainWindow : Window
 
     private void OpenSettingsWindow()
     {
-        SettingsWindow settingsWindow = new SettingsWindow();
+        SettingsWindow settingsWindow = new SettingsWindow(this);
         _subWindowsOpened++;
         settingsWindow.Closed += SettingsWindowClosed;
         settingsWindow.Show();
@@ -82,6 +89,7 @@ public partial class MainWindow : Window
         Button playButton = (Button)source!;
         playButton.Content = "Patching...";
         playButton.Background = Brushes.Yellow;
+        playButton.Foreground = Brushes.Black;
         _subWindowsOpened++;
         await Utils.PatchExecutableAsync();
         Utils.SetReadyToStart();
@@ -99,8 +107,14 @@ public partial class MainWindow : Window
             width = Width;
             height = Height;
         }
+
+        string bg = $"./img/{Utils.GetGame().ToLower()}bg.jpg";
+        if (_weedMode)
+        {
+            bg = "./img/vuekosmokingbluntweeddrugs.jpg";
+        }
         
-        ImageBrush bgImage = new ImageBrush(new Bitmap($"./img/{Utils.GetGame().ToLower()}bg.jpg"))
+        ImageBrush bgImage = new ImageBrush(new Bitmap(bg))
         {
             Stretch = Stretch.UniformToFill
         };
