@@ -1,11 +1,11 @@
-﻿-- chunkname: @./version.lua
+﻿-- chunkname: @/var/folders/r9/xbxmw8n51957gv9ggzrytvf80000gp/T/com.ironhidegames.frontiers.windows.steam.ep3S4swo/version.lua
 
 version = {}
-version.identity = "kingdom_rush_alliance"
-version.title = "Kingdom Rush Alliance"
-version.string = "kr5-desktop-1.00.20"
-version.string_short = "1.00.20"
-version.bundle_id = "com.ironhidegames.kingdomrush.alliance.windows.steam"
-version.vc = "kr5-desktop-1.00.20"
+version.identity = "kingdom_rush_frontiers"
+version.title = "Kingdom Rush Frontiers"
+version.string = "kr2-desktop-5.4.07"
+version.string_short = "5.4.07"
+version.bundle_id = "com.ironhidegames.frontiers.windows.steam"
+version.vc = "kr2-desktop-5.4.07"
 version.build = "DEBUG"
-version.bundle_keywords = "-windows-steam"
+version.bundle_keywords = "-frontiers-windows-steam"

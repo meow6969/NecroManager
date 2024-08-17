@@ -119,6 +119,7 @@ public static class CommandInterface
     private static void PlayCommand(string[] args)
     {
         CheckForGameInitialization(args[0]);
+        string game = Utils.GetGame();
         bool saveToConfig = true;
         bool collectingMods = false;
         bool setMods = false;
@@ -163,7 +164,11 @@ public static class CommandInterface
             {
                 try
                 {
-                    realModsList.Add(mod[0] != '/' ? Mods.GetModByPath($"/{mod}") : Mods.GetModByPath(mod));
+                    string relativeModPath = $"/mods/{game}";
+                    if (mod[0] != '/') relativeModPath += $"/{mod}";
+                    else relativeModPath += mod;
+                    Console.WriteLine(relativeModPath);
+                    realModsList.Add(Mods.GetModByPath(relativeModPath));
                 }
                 catch (Exception e)
                 {
@@ -209,7 +214,7 @@ public static class CommandInterface
             string errorMessage = "The following mods have errors!\n";
             foreach (Mods.Mod erroredMod in erroredMods)
             {
-                errorMessage += $"{erroredMod.Path}\n" +
+                errorMessage += $"{erroredMod.RelativePath}\n" +
                                 $"Exception: {erroredMod.Error!.Message}\n";
             }
             
@@ -219,6 +224,9 @@ public static class CommandInterface
             if (nya == null) Environment.Exit(0);
             if (nya.ToLower() != "y" || nya.ToLower() != "yes") Environment.Exit(0);
         }
+        Console.WriteLine("Enabled mods:");
+        Mods.PrintModsToConsole();
+        Console.WriteLine("\n");
         
         Console.WriteLine("Patching game...");
         Utils.PatchExecutable();

@@ -1,11 +1,11 @@
 ﻿-- chunkname: @./version.lua
 
 version = {}
-version.identity = "kingdom_rush_alliance"
-version.title = "Kingdom Rush Alliance"
-version.string = "kr5-desktop-1.00.20"
-version.string_short = "1.00.20"
-version.bundle_id = "com.ironhidegames.kingdomrush.alliance.windows.steam"
-version.vc = "kr5-desktop-1.00.20"
+version.identity = "kingdom_rush_origins"
+version.title = "Kingdom Rush Origins"
+version.bundle_id = "com.ironhidegames.origins.windows.steam"
+version.string = "kr3-desktop-4.2.10"
+version.string_short = "4.2.10"
+version.vc = "kr3-desktop-4.2.10"
 version.build = "DEBUG"
-version.bundle_keywords = "-windows-steam"
+version.bundle_keywords = "-origins-windows-steam"
