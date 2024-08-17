@@ -42,6 +42,7 @@
 <img src="https://raw.githubusercontent.com/meow6969/NecroManager/master/screenshots/cli.png" alt="screenshot of CLI">
 <img src="https://raw.githubusercontent.com/meow6969/NecroManager/master/screenshots/mainmenu.png" alt="screenshot of main menu">  
 <img src="https://raw.githubusercontent.com/meow6969/NecroManager/master/screenshots/settingsmenu.png" alt="screenshot of settings menu">
+<img src="https://raw.githubusercontent.com/meow6969/NecroManager/master/screenshots/moddisplay.png" alt="screenshot of mod display">
 
 # Credits
  * Lua decompiler made by [marsinator358](https://github.com/marsinator358/luajit-decompiler-v2)
