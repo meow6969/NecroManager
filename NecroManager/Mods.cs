@@ -109,11 +109,31 @@ public class Mods
         
         if (Directory.Exists(patchPath)) Directory.Delete(patchPath, true);
         Directory.CreateDirectory(patchPath);
+        PatchModDisplay(patchPath);
         
         foreach (Mod mod in GetEnabledGameMods())
         {
             Utils.CopyAll(new DirectoryInfo(mod.Path), new DirectoryInfo(patchPath));
         }
+    }
+
+    private static void PatchModDisplay(string patchPath)
+    {
+        Directory.CreateDirectory(Path.Combine(patchPath, "all-desktop"));
+        string modsLua = "MODS = \"";
+        foreach (Mod mod in GetEnabledGameMods())
+        {
+            modsLua += $"{mod.Name}\\n";
+        }
+
+        modsLua += "Mod Display\"";
+        File.Copy(
+            Path.Combine(
+                "./ModDisplay", $"{Utils.GetGame()}_screen_settings.lua"), 
+            Path.Combine(
+                patchPath, "all-desktop", "screen_settings.lua")
+            );
+        File.WriteAllText(Path.Combine(patchPath, "all-desktop", "mods.lua"), modsLua);
     }
 
     private static List<string> GetUsedFiles()
