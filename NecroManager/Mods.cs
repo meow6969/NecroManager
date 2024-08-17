@@ -119,6 +119,11 @@ public class Mods
 
     private static void PatchModDisplay(string patchPath)
     {
+        if (GetUsedFiles().Contains("/all-desktop/screen_settings.lua"))
+        {
+            return;
+        }
+        
         Directory.CreateDirectory(Path.Combine(patchPath, "all-desktop"));
         string modsLua = "MODS = \"";
         foreach (Mod mod in GetEnabledGameMods())
