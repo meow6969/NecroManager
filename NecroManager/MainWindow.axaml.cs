@@ -23,10 +23,49 @@ public partial class MainWindow : Window
         {
             if (_subWindowsOpened > 0) e.Cancel = true;
         };
-        // MeowView.Content = new Grid();
+
+        try
+        {
+            Utils.FindProgramExecutable("7z");
+        }
+        catch
+        {
+            Button button = new Button
+            {
+                Content = "View installation instructions",
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                Margin = new Thickness(16),
+            };
+            button.Click += ReadMeButtonClicked;
+            
+            SpawnErrorWindow("Could not find 7-Zip executable!\n" +
+                             "Are you sure 7-Zip is installed?", button);
+        }
+
         CreateContent();
         Resized += OnResize;
         Initialized += WaitForInitialization;
+    }
+
+    private async void ReadMeButtonClicked(object? source, RoutedEventArgs? args)
+    {
+        await Launcher.LaunchUriAsync(new Uri("https://github.com/meow6969/NecroManager?tab=readme-ov-file#installing"));
+        Close();
+    }
+    
+    private void SpawnErrorWindow(string errorMessage, Button button)
+    {
+        ErrorWindow errorWindow = new ErrorWindow(errorMessage, button);
+        _subWindowsOpened++;
+        errorWindow.Closed += ErrorWindowClosed;
+        errorWindow.Show();
+    }
+    
+    private void ErrorWindowClosed(object? sender, EventArgs e)
+    {
+        // Console.WriteLine("error window closed");
+        _subWindowsOpened--;
+        Close();
     }
 
     public void WeedMode()

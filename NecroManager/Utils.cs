@@ -159,7 +159,7 @@ public class Utils
         File.WriteAllText(Instance._configPath, jsonString);
     }
 
-    private static string FindProgramExecutable(string exeName)
+    public static string FindProgramExecutable(string exeName)
     {
         if (IsUnix())
         {

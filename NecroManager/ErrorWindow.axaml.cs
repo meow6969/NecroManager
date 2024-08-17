@@ -6,7 +6,7 @@ namespace NecroManager;
 public partial class ErrorWindow : Window
 {
     // the parameter here causes the ErrorWindow.axaml build warning even though this code runs fine
-    public ErrorWindow(string errorMessage)
+    public ErrorWindow(string errorMessage, Button? button = null)
     {
         InitializeComponent();
         Topmost = true;
@@ -29,5 +29,10 @@ public partial class ErrorWindow : Window
         }
         // i have to do this in code for some reason it doesnt work setting it in axaml
         ErrorMessage.FontFamily = new FontFamily("avares://NecroManager/fonts#Fira Code");
+
+        if (button != null)
+        {
+            Panel.Children.Add(button);
+        }
     }
 }

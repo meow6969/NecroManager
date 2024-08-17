@@ -25,9 +25,11 @@
  * Install .NET 8.0 Runtime
    * Ubuntu/Debian: [View Microsoft docs](https://learn.microsoft.com/en-us/dotnet/core/install/linux-debian#debian-12)
    * Arch: `sudo pacman -S dotnet-host dotnet-runtime aspnet-runtime`
-   * Download NecroManager from [Releases](https://github.com/meow6969/NecroManager/releases)
-   * Extract NecroManager
-   * Run NecroManger
+ * Install WINE
+   * [View Lutris docs](https://github.com/lutris/docs/blob/master/WineDependencies.md)
+ * Download NecroManager from [Releases](https://github.com/meow6969/NecroManager/releases)
+ * Extract NecroManager
+ * Run NecroManger
 
 # CLI
  * To start CLI, pass NecroManager with arguments
