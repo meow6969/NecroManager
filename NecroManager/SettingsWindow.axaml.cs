@@ -153,11 +153,12 @@ public partial class SettingsWindow : Window
             {
                 MainPanel.Children.Add(new TextBlock()
                 {
-                    Margin = new Thickness(32, 6.75),
-                    Text = $"{mod.Name}",
+                    Margin = new Thickness(32, 2),
+                    Text = $"{mod.Name} by {mod.Author}\n" +
+                           $"{mod.Description}",
                     // Foreground = Brushes.LightGray,
                     VerticalAlignment = VerticalAlignment.Center,
-                    FontSize = 15,
+                    FontSize = 13,
                     Background = Brushes.DimGray,
                     Foreground = Brushes.White
                 });
@@ -169,7 +170,8 @@ public partial class SettingsWindow : Window
                 Name = mod.RelativePath,
                 Margin = new Thickness(5, 0),
                 IsChecked = mod.Enabled,
-                Content = mod.Name,
+                Content = $"{mod.Name} by {mod.Author}\n" +
+                          $"{mod.Description}",
                 FontSize = 15
             };
             checkBox.IsCheckedChanged += ModCheckChecked;
@@ -349,7 +351,7 @@ public partial class SettingsWindow : Window
         CheckBox checkBox = (CheckBox)sender;
         if (checkBox.IsChecked == null) return;
         if (checkBox.Name == "") return;
-        Mods.PrintModsToConsole();
+        // Mods.PrintModsToConsole();
         
         if ((bool)checkBox.IsChecked)
         {
