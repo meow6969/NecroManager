@@ -132,6 +132,7 @@ public partial class MainWindow : Window
         _subWindowsOpened++;
         await Utils.PatchExecutableAsync();
         Utils.SetReadyToStart();
+        _subWindowsOpened--;
         Close();
     }
 
