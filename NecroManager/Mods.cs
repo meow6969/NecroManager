@@ -80,7 +80,7 @@ public class Mods
                     mod.Files = files;
                     mod.Game = gameCode;
                     mod.Path = modDir;
-                    mod.RelativePath = modDir[gameModsDir.Length..].Replace('\\', '/');
+                    mod.RelativePath = modDir[Utils.GetInstallPath().Length..].Replace('\\', '/');
                     if (Utils.GetGameConfig(gameCode).EnabledMods.Contains(mod.Path)) mod.Enabled = true;
                     else if (Utils.GetGameConfig(gameCode).EnabledMods.Contains(mod.RelativePath)) mod.Enabled = true;
                     allMods.Add(mod);
@@ -120,7 +120,7 @@ public class Mods
     {
         List<string> usedFiles = [];
         
-        foreach (Mod mod in GetEnabledMods())
+        foreach (Mod mod in GetEnabledGameMods())
         {
             foreach (string file in mod.Files)
             {
@@ -224,7 +224,7 @@ public class Mods
         {
             if (mod.Enabled && mod.Game == Utils.GetGame())
             {
-                enabledMods += $"{mod.Name}, ";
+                enabledMods += $"{mod.RelativePath}, ";
             }
         }
 

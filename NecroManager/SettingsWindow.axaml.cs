@@ -348,18 +348,18 @@ public partial class SettingsWindow : Window
 
         CheckBox checkBox = (CheckBox)sender;
         if (checkBox.IsChecked == null) return;
+        if (checkBox.Name == "") return;
+        Mods.PrintModsToConsole();
         
         if ((bool)checkBox.IsChecked)
         {
-            Debug.Assert(checkBox.Name != null, "checkBox.Name != null");
-            Mods.GetModByPath(checkBox.Name).Enabled = true;
+            Mods.GetModByPath(checkBox.Name!).Enabled = true;
             Mods.SaveGameModsToConfig();
             // Mods.PrintModsToConsole();
         }
         else
         {
-            Debug.Assert(checkBox.Name != null, "checkBox.Name != null");
-            Mods.GetModByPath(checkBox.Name).Enabled = false;
+            Mods.GetModByPath(checkBox.Name!).Enabled = false;
             Mods.SaveGameModsToConfig();
             // Mods.PrintModsToConsole();
         }
