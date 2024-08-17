@@ -9,6 +9,8 @@ public static class CommandInterface
 {
     public static void Commands(string[] args)
     {
+        CheckForDependencies();
+        
         if (args[0] == "--help" || args[0] == "-h" || args[0] == "h")
         {
             HelpCommand();
@@ -305,6 +307,34 @@ public static class CommandInterface
         {
             Console.WriteLine("Invalid path\n\n");
             HelpCommand();
+        }
+    }
+
+    private static void CheckForDependencies()
+    {
+        try
+        {
+            Utils.FindProgramExecutable("7z");
+        }
+        catch
+        {
+            Console.WriteLine("Could not find 7-Zip executable!\n" +
+                              "Are you sure it's installed?\n" +
+                              "View installation instructions here: https://github.com/meow6969/NecroManager?tab=readme-ov-file#installing");
+            Environment.Exit(0);
+        }
+
+        if (!Utils.IsUnix()) return;
+        try
+        {
+            Utils.FindProgramExecutable("wine");
+        }
+        catch
+        {
+            Console.WriteLine("Could not find 7-Zip executable!\n" +
+                              "Are you sure it's installed?\n" +
+                              "View installation instructions here: https://github.com/meow6969/NecroManager?tab=readme-ov-file#installing");
+            Environment.Exit(0);
         }
     }
 

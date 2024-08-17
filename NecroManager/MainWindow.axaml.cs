@@ -23,23 +23,36 @@ public partial class MainWindow : Window
         {
             if (_subWindowsOpened > 0) e.Cancel = true;
         };
-
+        
+        Button button = new Button
+        {
+            Content = "View installation instructions",
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(16),
+        };
+        button.Click += ReadMeButtonClicked;
+        
         try
         {
             Utils.FindProgramExecutable("7z");
         }
         catch
         {
-            Button button = new Button
-            {
-                Content = "View installation instructions",
-                HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                Margin = new Thickness(16),
-            };
-            button.Click += ReadMeButtonClicked;
-            
             SpawnErrorWindow("Could not find 7-Zip executable!\n" +
                              "Are you sure 7-Zip is installed?", button);
+        }
+
+        if (Utils.IsUnix())
+        {
+            try
+            {
+                Utils.FindProgramExecutable("wine");
+            }
+            catch
+            {
+                SpawnErrorWindow("Could not find WINE executable!\n" +
+                                 "Are you sure WINE is installed?", button);
+            }
         }
 
         CreateContent();
