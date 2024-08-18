@@ -333,13 +333,6 @@ public class Utils
     public static void DecompileGame(string decompileLocation, bool force=false)
     {
         GetLatestLuaDecompiler();
-        decompileLocation = decompileLocation.Replace('\\', '/');
-        
-        if (!IsUnix())
-        {
-            // for some reason on windows it puts a / before the drive letter and it messes everything up
-            if (decompileLocation[0] == '/' || decompileLocation[0] == '\\') decompileLocation = decompileLocation[1..];
-        }
         
         decompileLocation = ExpandTildePath(decompileLocation);
         string luaDecompiler = Path.Combine(Instance._installPath, "tools", "luajit-decompiler-v2.exe");
