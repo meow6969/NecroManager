@@ -119,9 +119,10 @@ public class Mods
 
     private static void PatchModDisplay(string patchPath)
     {
-        if (GetUsedFiles().Contains("/all-desktop/screen_settings.lua"))
+        if (GetTwiceUsedFiles().Contains("/all-desktop/screen_settings.lua")) return;
+        if (GetOnceUsedFiles().Contains("/all-desktop/screen_settings.lua"))
         {
-            return;
+            
         }
         
         Directory.CreateDirectory(Path.Combine(patchPath, "all-desktop"));
@@ -141,19 +142,41 @@ public class Mods
         File.WriteAllText(Path.Combine(patchPath, "all-desktop", "mods.lua"), modsLua);
     }
 
-    private static List<string> GetUsedFiles()
+    private static void MergeModdedFiles(string relativeFilePath)
     {
-        List<string> usedFiles = [];
+        
+    }
+    
+    private static List<string> GetOnceUsedFiles()
+    {
+        List<string> onceUsedFiles = [];
         
         foreach (Mod mod in GetEnabledGameMods())
         {
             foreach (string file in mod.Files)
             {
-                usedFiles.Add(file);
+                onceUsedFiles.Add(file);
             }
         }
 
-        return usedFiles;
+        return onceUsedFiles;
+    }
+
+    private static List<string> GetTwiceUsedFiles()
+    {
+        List<string> onceUsedFiles = [];
+        List<string> twiceUsedFiles = [];
+        
+        foreach (Mod mod in GetEnabledGameMods())
+        {
+            foreach (string file in mod.Files)
+            {
+                if (onceUsedFiles.Contains(file)) twiceUsedFiles.Add(file);
+                else onceUsedFiles.Add(file);
+            }
+        }
+
+        return twiceUsedFiles;
     }
 
     private static List<Mod> GetEnabledGameMods()
@@ -218,7 +241,7 @@ public class Mods
     {
         if (mod.Enabled) return false;
         
-        List<string> usedFiles = GetUsedFiles();
+        List<string> usedFiles = GetTwiceUsedFiles();
         
         foreach (string file in mod.Files)
         {
