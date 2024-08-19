@@ -1,4 +1,7 @@
-﻿namespace NecroManager;
+﻿using System;
+using System.IO;
+
+namespace NecroManager;
 
 internal static class Program
 {

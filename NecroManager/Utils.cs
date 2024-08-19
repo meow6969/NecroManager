@@ -187,7 +187,9 @@ public class Utils
                         "Path", "CANNOT_FIND_7ZIP"
                     )!;
                     if (path == "CANNOT_FIND_7ZIP") throw new Exception("Cannot find executable");
-                    return $@"{path}\7z.exe";
+                    return Path.Combine(path, "7z.exe");
+                case "diff3":
+                    return Path.Combine(Instance._installPath, "tools", "diff3.exe");
                 default:
                     throw new Exception("Cannot find executable");
             }
@@ -293,6 +295,7 @@ public class Utils
         Directory.CreateDirectory(Path.Combine(_installPath, "mods", "Kr5"));
         Directory.CreateDirectory(Path.Combine(_installPath, "patch"));
         Directory.CreateDirectory(Path.Combine(_installPath, "tools"));
+        Directory.CreateDirectory(Path.Combine(_installPath, "decompiled"));
     }
 
     public static void OpenFileManager(string path)
@@ -464,12 +467,62 @@ public class Utils
         Directory.SetCurrentDirectory(oldWorkingDirectory);
     }
 
+    public static void GetDiffExecutables()
+    {
+        if (IsUnix()) return;
+        if (File.Exists(Path.Combine(GetInstallPath(), "tools", "diff.exe"))) return;
+        
+        HttpClient httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Add("User-Agent", "nya/69.0");
+        
+        string releaseInfo = httpClient.GetStringAsync("https://api.github.com/repos/" +
+                                                       "git-for-windows/git/releases").Result;
+        string? downloadLine = null;
+        foreach (string line in releaseInfo.Split(","))
+        {
+            if (line.Contains("browser_download_url") && downloadLine == null)
+            {
+                if (line.Contains("PortableGit") && line.Contains("64-bit")) continue;
+                downloadLine = $"{line.Split(':')[^2]}:{line.Split(':')[^1]}";
+                break;
+            }
+        }
+
+        if (downloadLine == null) throw new Exception("Couldnt get diff executable");
+
+        string exeUrl = downloadLine.Replace(" ", null).Replace("\"", null);
+        exeUrl = exeUrl[..^2];
+        string saveLocation = Path.Combine(Instance._installPath, "tools");
+        string portableGitLocation = Path.Combine(Path.GetTempPath(), "portablegit.7z.exe");
+        
+        File.WriteAllBytes(portableGitLocation, 
+            httpClient.GetByteArrayAsync(exeUrl).Result);
+        
+        ProcessStartInfo pro = new ProcessStartInfo
+        {
+            WindowStyle = ProcessWindowStyle.Hidden,
+            FileName = FindProgramExecutable("7z"),
+            Arguments = $"-y e \"{portableGitLocation}\" usr/bin/ -o\"{saveLocation}\""
+        };
+        Process x = Process.Start(pro) ?? throw new InvalidOperationException();
+        x.WaitForExit();
+    }
+
+    public static string RemoveInitialPathSlash(string path)
+    {
+        if (path.Length == 0) return path;
+        if (path[0] == '/' || path[0] == '\\') path = path[1..];
+
+        return path;
+    }
+
     public static bool IsUnix()
     {
         return RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
     }
     
-    public static void CopyAll(DirectoryInfo source, DirectoryInfo target) // https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo
+    // https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo
+    public static void CopyAll(DirectoryInfo source, DirectoryInfo target) 
     {
         if (source.FullName.ToLower() == target.FullName.ToLower())
         {
@@ -486,6 +539,22 @@ public class Utils
         foreach (FileInfo fi in source.GetFiles())
         {
             // Console.WriteLine(@$"Copying {target.FullName}{Path.DirectorySeparatorChar}{fi.Name}");
+            if (File.Exists(Path.Combine(target.ToString(), fi.Name)) && fi.Extension == "lua")
+            {
+                // we need to merge the files now
+                string patchPath = Mods.GetPatchPath();
+                string gameFilePath = target.FullName[patchPath.Length..];
+                Console.WriteLine(fi.FullName);
+                Console.WriteLine(target.FullName);
+                gameFilePath = RemoveInitialPathSlash(gameFilePath);
+                gameFilePath = gameFilePath + fi.Name;
+                Console.WriteLine(gameFilePath);
+                Mods.MergeModdedFiles(
+                    target.FullName,
+                    fi.FullName,
+                    gameFilePath);
+                continue;
+            }
             fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
         }
 

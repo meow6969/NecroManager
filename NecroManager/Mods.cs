@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json;
 using System.IO.Compression;
 using System.Linq;
@@ -103,29 +104,43 @@ public class Mods
         return [allMods, erroredMods];
     }
 
+    public static string GetPatchPath()
+    {
+        return Path.Combine(Utils.GetInstallPath(), "patch");
+    }
+
     public static void PreparePatchDirectory()
     {
-        string patchPath = Path.Combine(Utils.GetInstallPath(), "patch");
+        string patchPath = GetPatchPath();
         
         if (Directory.Exists(patchPath)) Directory.Delete(patchPath, true);
         Directory.CreateDirectory(patchPath);
-        PatchModDisplay(patchPath);
         
         foreach (Mod mod in GetEnabledGameMods())
         {
             Utils.CopyAll(new DirectoryInfo(mod.Path), new DirectoryInfo(patchPath));
         }
+        
+        PatchModDisplay();
     }
 
-    private static void PatchModDisplay(string patchPath)
+    private static void PatchModDisplay()
     {
         if (GetTwiceUsedFiles().Contains("/all-desktop/screen_settings.lua")) return;
+        
+        string patchPath = GetPatchPath();
+        Directory.CreateDirectory(Path.Combine(patchPath, "all-desktop"));
+        string modDisplayFile = Path.GetFullPath(Path.Combine("./ModDisplay", $"{Utils.GetGame()}_screen_settings.lua"));
+        
         if (GetOnceUsedFiles().Contains("/all-desktop/screen_settings.lua"))
         {
-            
+            MergeModdedFiles(
+                Path.Combine(patchPath, "all-desktop", "screen_settings.lua"),
+                modDisplayFile,
+                "/all-desktop/screen_settings.lua"
+                );
         }
         
-        Directory.CreateDirectory(Path.Combine(patchPath, "all-desktop"));
         string modsLua = "MODS = \"";
         foreach (Mod mod in GetEnabledGameMods())
         {
@@ -134,17 +149,53 @@ public class Mods
 
         modsLua += "Mod Display\"";
         File.Copy(
-            Path.Combine(
-                "./ModDisplay", $"{Utils.GetGame()}_screen_settings.lua"), 
+            modDisplayFile, 
             Path.Combine(
                 patchPath, "all-desktop", "screen_settings.lua")
             );
         File.WriteAllText(Path.Combine(patchPath, "all-desktop", "mods.lua"), modsLua);
     }
 
-    private static void MergeModdedFiles(string relativeFilePath)
+    public static void MergeModdedFiles(string moddedFilePath1, string moddedFilePath2, string relativeGameFilePath)
     {
+        // moddedFilePath1 is full path of modded file 1 which is inside of the patchPath. this file gets overwritten
+        // by this function
+        // moddedFilePath 2 is full path of modded file 2,
+        // relativeGameFilePath is the relative path of the game file, for example "/all-desktop/screen_settings.lua"
         
+        Console.WriteLine($"MergeModdedFiles()\n" +
+                          $"moddedFilePath1:      {moddedFilePath1}\n" +
+                          $"moddedFilePath2:      {moddedFilePath2}\n" +
+                          $"relativeGameFilePath: {relativeGameFilePath}\n");
+        
+        relativeGameFilePath = Utils.RemoveInitialPathSlash(relativeGameFilePath);
+        
+        string decompiledGamePath = Path.Combine(Utils.GetInstallPath(), "decompiled", Utils.GetGame());
+        if (!Directory.Exists(decompiledGamePath)) Utils.DecompileGame(decompiledGamePath);
+
+        string vanillaGameFilePath = Path.Combine(decompiledGamePath, relativeGameFilePath);
+        Utils.GetDiffExecutables();
+        
+        ProcessStartInfo pro = new ProcessStartInfo
+        {
+            WindowStyle = ProcessWindowStyle.Hidden,
+            FileName = Utils.FindProgramExecutable("diff3"),
+            Arguments = $"-m \"{moddedFilePath1}\" \"{vanillaGameFilePath}\" \"{moddedFilePath2}\"",
+            RedirectStandardOutput = true
+        };
+        if (!Utils.IsUnix())
+        {
+            // diff3 needs diff.exe in path to work
+            string exeParentPath = Path.Combine(Utils.GetInstallPath(), "tools");
+            pro.EnvironmentVariables["PATH"] = $"{Environment.GetEnvironmentVariable("PATH")};{exeParentPath}";
+        }
+        Process x = Process.Start(pro) ?? throw new InvalidOperationException();
+        x.WaitForExit();
+        string mergedFile = x.StandardOutput.ReadToEnd();
+        
+        // the parent directory *should* have already been made once weve gotten to this point
+        File.Delete(moddedFilePath1);
+        File.WriteAllText(moddedFilePath1, mergedFile);
     }
     
     private static List<string> GetOnceUsedFiles()
