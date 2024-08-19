@@ -13,7 +13,7 @@
 
 ### Windows
  * Install [7-Zip](https://www.7-zip.org/a/7z2408-x64.exe)
- * Install [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-aspnetcore-8.0.8-windows-x64-installer)
+ * Install [.NET 8.0 Hosting Bundle](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-aspnetcore-8.0.8-windows-hosting-bundle-installer)
  * Download NecroManager from [Releases](https://github.com/meow6969/NecroManager/releases)
  * Extract NecroManager
  * Run NecroManager.exe
