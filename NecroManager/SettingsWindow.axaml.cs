@@ -208,6 +208,7 @@ public partial class SettingsWindow : Window
         if (!Utils.IsDirectoryEmpty(decompilePath))
         {
             SpawnErrorWindow("Directory not empty.");
+            _subWindowsOpened--;
             return;
         }
 
