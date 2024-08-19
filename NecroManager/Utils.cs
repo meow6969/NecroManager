@@ -388,6 +388,7 @@ public class Utils
         
         Process x2 = Process.Start(pro2) ?? throw new InvalidOperationException();
         x2.WaitForExit();
+        // if someone doesnt have visual c++ 2015-2022 runtimes installed, x2.ExitCode will be -1073741515
     }
 
     public static void SetReadyToStart()
@@ -480,9 +481,9 @@ public class Utils
         string? downloadLine = null;
         foreach (string line in releaseInfo.Split(","))
         {
-            if (line.Contains("browser_download_url") && downloadLine == null)
+            if (line.Contains("browser_download_url") || downloadLine == null)
             {
-                if (line.Contains("PortableGit") && line.Contains("64-bit")) continue;
+                if (!line.Contains("PortableGit") && !line.Contains("64-bit")) continue;
                 downloadLine = $"{line.Split(':')[^2]}:{line.Split(':')[^1]}";
                 break;
             }
@@ -490,8 +491,8 @@ public class Utils
 
         if (downloadLine == null) throw new Exception("Couldnt get diff executable");
 
-        string exeUrl = downloadLine.Replace(" ", null).Replace("\"", null);
-        exeUrl = exeUrl[..^2];
+        string exeUrl = downloadLine.Replace(" ", null).Replace("\"", null).Replace("}", null).Replace("]", null);
+        // exeUrl = exeUrl[..^1];
         string saveLocation = Path.Combine(Instance._installPath, "tools");
         string portableGitLocation = Path.Combine(Path.GetTempPath(), "portablegit.7z.exe");
         
@@ -539,7 +540,7 @@ public class Utils
         foreach (FileInfo fi in source.GetFiles())
         {
             // Console.WriteLine(@$"Copying {target.FullName}{Path.DirectorySeparatorChar}{fi.Name}");
-            if (File.Exists(Path.Combine(target.ToString(), fi.Name)) && fi.Extension == "lua")
+            if (File.Exists(Path.Combine(target.ToString(), fi.Name)) && fi.Extension == ".lua")
             {
                 // we need to merge the files now
                 string patchPath = Mods.GetPatchPath();
@@ -550,7 +551,7 @@ public class Utils
                 gameFilePath = gameFilePath + fi.Name;
                 Console.WriteLine(gameFilePath);
                 Mods.MergeModdedFiles(
-                    target.FullName,
+                    Path.Combine(target.FullName, fi.Name),
                     fi.FullName,
                     gameFilePath);
                 continue;
