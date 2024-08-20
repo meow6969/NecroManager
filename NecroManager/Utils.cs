@@ -453,19 +453,20 @@ public class Utils
         // Console.WriteLine(moddedExe);
         // Console.WriteLine($"CWD=\"{patchPath}\" 7z u \"{moddedExe}\" .");
 
-        string oldWorkingDirectory = Directory.GetCurrentDirectory();
-        Directory.SetCurrentDirectory(patchPath);
+        // string oldWorkingDirectory = Directory.GetCurrentDirectory();
+        // Directory.SetCurrentDirectory(patchPath);
         
         ProcessStartInfo pro = new ProcessStartInfo
         {
             WindowStyle = ProcessWindowStyle.Hidden,
             FileName = FindProgramExecutable("7z"),
-            Arguments = $"-y -bd u \"{moddedExe}\" ."
+            Arguments = $"-y -bd u \"{moddedExe}\" .",
+            WorkingDirectory = patchPath
         };
         Process x = Process.Start(pro) ?? throw new InvalidOperationException();
         x.WaitForExit();
         
-        Directory.SetCurrentDirectory(oldWorkingDirectory);
+        // Directory.SetCurrentDirectory(oldWorkingDirectory);
     }
 
     public static void GetDiffExecutables()
