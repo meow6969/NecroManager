@@ -25,6 +25,7 @@ public class Utils
         {
             public string? ExecutablePath { get; set; }
             public List<string> EnabledMods { get; set; } = [];
+            public bool SteamEnabled { get; set; } = true;
         }
 
         public TheGame Kr1 { get; init; } = new TheGame();
@@ -43,18 +44,33 @@ public class Utils
         
         if (!File.Exists(_configPath))
         {
-            Directory.CreateDirectory(_installPath);
-            
+            CreateNewConfigFile(_configPath, _installPath);
             _config = new Config();
-            string jsonString = JsonSerializer.Serialize(_config);
-            File.WriteAllText(_configPath, jsonString);
         }
         else
         {
-            string jsonString = File.ReadAllText(_configPath);
-            
-            _config = JsonSerializer.Deserialize<Config>(jsonString) ?? throw new InvalidOperationException();
+            try
+            {
+                string jsonString = File.ReadAllText(_configPath);
+
+                _config = JsonSerializer.Deserialize<Config>(jsonString) ?? throw new InvalidOperationException();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                CreateNewConfigFile(_configPath, _installPath);
+                _config = new Config();
+            }
         }
+    }
+
+    private static void CreateNewConfigFile(string configPath, string installPath)
+    {
+        Directory.CreateDirectory(installPath);
+            
+        Config config = new Config();
+        string jsonString = JsonSerializer.Serialize(config);
+        File.WriteAllText(configPath, jsonString);
     }
 
     private static void GetLatestLuaDecompiler()
