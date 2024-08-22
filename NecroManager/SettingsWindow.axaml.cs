@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Avalonia;
 using Avalonia.Controls;
@@ -91,6 +90,17 @@ public partial class SettingsWindow : Window
         };
         decompileButton.Click += DecompileButton;
         MainPanel.Children.Add(decompileButton);
+
+        CheckBox runWithSteamCheckBox = new CheckBox
+        {
+            Margin = new Thickness(5, 0),
+            IsChecked = Utils.GetGameConfig().SteamEnabled,
+            Content = "Start game with steam",
+            Foreground = Brushes.White,
+            FontSize = 15
+        };
+        runWithSteamCheckBox.IsCheckedChanged += RunWithSteamCheckChecked;
+        MainPanel.Children.Add(runWithSteamCheckBox);
         
         MainPanel.Children.Add(new Separator
         {
@@ -172,6 +182,7 @@ public partial class SettingsWindow : Window
                 IsChecked = mod.Enabled,
                 Content = $"{mod.Name} by {mod.Author}\n" +
                           $"{mod.Description}",
+                Foreground = Brushes.White,
                 FontSize = 15
             };
             checkBox.IsCheckedChanged += ModCheckChecked;
@@ -366,6 +377,19 @@ public partial class SettingsWindow : Window
             Mods.SaveGameModsToConfig();
             // Mods.PrintModsToConsole();
         }
+        
+        AddContent();
+    }
+    
+    private void RunWithSteamCheckChecked(object? sender, RoutedEventArgs? args)
+    {
+        if (sender == null) return;
+
+        CheckBox checkBox = (CheckBox)sender;
+        if (checkBox.IsChecked == null) return;
+        // Mods.PrintModsToConsole();
+        
+        Utils.SetGameConfig(steam:checkBox.IsChecked);
         
         AddContent();
     }

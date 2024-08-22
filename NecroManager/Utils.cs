@@ -503,8 +503,11 @@ public class Utils
     private static void MoveVanillaExeBack()
     {
         if (!File.Exists(GetVanillaExePath())) return;
-        if (GetGameConfig().SteamEnabled)
+        if (GetGameConfig().SteamEnabled && Instance._startGame)
         {
+            // game doesnt start immediately, so we need to wait first
+            System.Threading.Thread.Sleep(10000);
+            
             // starting game with steam means x.WaitForExit() exits early, so we need to check for the game
             if (Process.GetProcessesByName(GetGameExeName()).Length > 0)
             {
