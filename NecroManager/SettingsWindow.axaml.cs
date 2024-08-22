@@ -285,7 +285,7 @@ public partial class SettingsWindow : Window
         
         if (files.Count == 0) return;
 
-        string executableName = Utils.GetOfficialName().Replace(":", string.Empty) + ".exe";
+        string executableName = Utils.GetGameExeName();
         if (files[0].Name != executableName)
         {
             SpawnErrorWindow($"Invalid executable name: {files[0].Name}\n" +

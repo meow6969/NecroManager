@@ -495,9 +495,22 @@ public class Utils
         File.Move(GetModdedExePath(), GetGameConfig().ExecutablePath!);
     }
 
+    public static string GetGameExeName()
+    {
+        return GetOfficialName().Replace(":", string.Empty) + ".exe";
+    }
+
     private static void MoveVanillaExeBack()
     {
         if (!File.Exists(GetVanillaExePath())) return;
+        if (GetGameConfig().SteamEnabled)
+        {
+            // starting game with steam means x.WaitForExit() exits early, so we need to check for the game
+            if (Process.GetProcessesByName(GetGameExeName()).Length > 0)
+            {
+                System.Threading.Thread.Sleep(2000);
+            }
+        }
         File.Move(GetVanillaExePath(), GetGameConfig().ExecutablePath!, true);
     }
 
