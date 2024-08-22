@@ -507,9 +507,13 @@ public class Utils
         {
             // game doesnt start immediately, so we need to wait first
             System.Threading.Thread.Sleep(10000);
+
+            string gameExe;
+            if (IsUnix()) gameExe = GetGameExeName();
+            else gameExe = GetGameExeName()[..(GetGameExeName().Length - 4)]; // on windows the .exe is truncated
             
             // starting game with steam means x.WaitForExit() exits early, so we need to check for the game
-            while (Process.GetProcessesByName(GetGameExeName()).Length > 0)
+            while (Process.GetProcessesByName(gameExe).Length > 0)
             {
                 System.Threading.Thread.Sleep(2000);
             }
