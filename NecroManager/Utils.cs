@@ -452,11 +452,13 @@ public class Utils
         {
             if (GetGameConfig().SteamEnabled)
             {
-                Process.Start(new ProcessStartInfo
+                ProcessStartInfo pro = new ProcessStartInfo
                 {
                     UseShellExecute = true,
                     FileName = $"steam://rungameid/{GetGameSteamId()}"
-                });
+                };
+                Process x = Process.Start(pro) ?? throw new InvalidOperationException();
+                x.WaitForExit();
             }
             
             else if (IsUnix())
