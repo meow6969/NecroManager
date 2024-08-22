@@ -158,7 +158,7 @@ public class Mods
 
     public static void MergeModdedFiles(string moddedFilePath1, string moddedFilePath2, string relativeGameFilePath)
     {
-        // moddedFilePath1 is full path of modded file 1 which is inside of the patchPath. this file gets overwritten
+        // moddedFilePath1 is full path of modded file 1 which is inside the patchPath. this file gets overwritten
         // by this function
         // moddedFilePath 2 is full path of modded file 2,
         // relativeGameFilePath is the relative path of the game file, for example "/all-desktop/screen_settings.lua"

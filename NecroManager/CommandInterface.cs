@@ -77,6 +77,11 @@ public static class CommandInterface
             $"               NOTE: each mod is named by its parent folder name, so mod1/mod.json would be named mod1.\n" +
             $"  -n         : prevents the mods selected by -m from being saved in the config file\n" +
             $"               NOTE: must be used with command p and argument -m\n" +
+            $"  -s         : Starts the game with steam\n" +
+            $"               NOTE: this is saved to the game config, you must only pass this once per game\n" +
+            $"               NOTE: by default starts with steam\n" +
+            $"  -ns        : Starts the game without steam, use this if you have a copy not provided by steam\n" +
+            $"               NOTE: also saved to game config and only has to be used once\n" +
             $"  -f         : forces decompile to non-empty folders\n" +
             $"               NOTE: must be used with command d\n" +
             $"               NOTE: overwrites existing files\n" +
@@ -125,6 +130,7 @@ public static class CommandInterface
         bool saveToConfig = true;
         bool collectingMods = false;
         bool setMods = false;
+        bool? useSteam = null;
         string? modsListString = null;
         List<string> modsList = [];
         foreach (string word in args)
@@ -132,6 +138,20 @@ public static class CommandInterface
             if (word == "-n")
             {
                 saveToConfig = false;
+                collectingMods = false;
+                continue;
+            }
+
+            if (word == "-s")
+            {
+                useSteam = true;
+                collectingMods = false;
+                continue;
+            }
+            
+            if (word == "-ns")
+            {
+                useSteam = false;
                 collectingMods = false;
                 continue;
             }
@@ -229,6 +249,11 @@ public static class CommandInterface
         Console.WriteLine("Enabled mods:");
         Mods.PrintModsToConsole();
         Console.WriteLine("\n");
+
+        if (useSteam != null)
+        {
+            Utils.SetGameConfig(steam:useSteam);
+        }
         
         Console.WriteLine("Patching game...");
         Utils.PatchExecutable();

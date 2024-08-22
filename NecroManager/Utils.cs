@@ -148,6 +148,18 @@ public class Utils
         return Instance._game;
     }
 
+    private static int GetGameSteamId()
+    {
+        return GetGame() switch
+        {
+            "Kr1" => 246420,
+            "Kr2" => 458710,
+            "Kr3" => 816340,
+            "Kr5" => 2849080,
+            _ => throw new Exception("Could not get steam game id")
+        };
+    }
+
     public static Config GetConfig()
     {
         return Instance._config;
@@ -233,7 +245,7 @@ public class Utils
         }
     }
 
-    public static void SetGameConfig(string? executablePath = null, List<string>? enabledMods = null)
+    public static void SetGameConfig(string? executablePath = null, List<string>? enabledMods = null, bool? steam = null)
     {
         if (!IsUnix() && executablePath != null)
         {
@@ -254,6 +266,11 @@ public class Utils
                     Instance._config.Kr1.EnabledMods = enabledMods;
                 }
 
+                if (steam != null)
+                {
+                    Instance._config.Kr1.SteamEnabled = (bool)steam;
+                }
+
                 break;
             case "Kr2":
                 if (executablePath != null)
@@ -264,6 +281,11 @@ public class Utils
                 if (enabledMods != null)
                 {
                     Instance._config.Kr2.EnabledMods = enabledMods;
+                }
+                
+                if (steam != null)
+                {
+                    Instance._config.Kr2.SteamEnabled = (bool)steam;
                 }
 
                 break;
@@ -277,6 +299,11 @@ public class Utils
                 {
                     Instance._config.Kr3.EnabledMods = enabledMods;
                 }
+                
+                if (steam != null)
+                {
+                    Instance._config.Kr3.SteamEnabled = (bool)steam;
+                }
 
                 break;
             case "Kr5":
@@ -288,6 +315,11 @@ public class Utils
                 if (enabledMods != null)
                 {
                     Instance._config.Kr5.EnabledMods = enabledMods;
+                }
+                
+                if (steam != null)
+                {
+                    Instance._config.Kr5.SteamEnabled = (bool)steam;
                 }
 
                 break;
@@ -418,7 +450,16 @@ public class Utils
 
         try
         {
-            if (IsUnix())
+            if (GetGameConfig().SteamEnabled)
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    UseShellExecute = true,
+                    FileName = $"steam://rungameid/{GetGameSteamId()}"
+                });
+            }
+            
+            else if (IsUnix())
             {
                 ProcessStartInfo pro = new ProcessStartInfo
                 {
