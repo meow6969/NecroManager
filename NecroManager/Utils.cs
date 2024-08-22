@@ -407,7 +407,7 @@ public class Utils
                 ProcessStartInfo pro = new ProcessStartInfo
                 {
                     FileName = FindProgramExecutable("wine"),
-                    Arguments = $"\"{GetVanillaExePath()}\""
+                    Arguments = $"\"{GetGameConfig().ExecutablePath}\""
                 };
                 Process x = Process.Start(pro) ?? throw new InvalidOperationException();
                 x.WaitForExit();
@@ -416,7 +416,7 @@ public class Utils
             {
                 ProcessStartInfo pro = new ProcessStartInfo
                 {
-                    FileName = GetVanillaExePath()
+                    FileName = GetGameConfig().ExecutablePath
                 };
                 Process x = Process.Start(pro) ?? throw new InvalidOperationException();
                 x.WaitForExit();
