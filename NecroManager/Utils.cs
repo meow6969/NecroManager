@@ -399,33 +399,61 @@ public class Utils
     public static void StartGame()
     {
         if (!Instance._startGame) return;
+
+        try
+        {
+            if (IsUnix())
+            {
+                ProcessStartInfo pro = new ProcessStartInfo
+                {
+                    FileName = FindProgramExecutable("wine"),
+                    Arguments = $"\"{GetVanillaExePath()}\""
+                };
+                Process x = Process.Start(pro) ?? throw new InvalidOperationException();
+                x.WaitForExit();
+            }
+            else
+            {
+                ProcessStartInfo pro = new ProcessStartInfo
+                {
+                    FileName = GetVanillaExePath()
+                };
+                Process x = Process.Start(pro) ?? throw new InvalidOperationException();
+                x.WaitForExit();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
         
-        if (IsUnix())
-        {
-            ProcessStartInfo pro = new ProcessStartInfo
-            {
-                FileName = FindProgramExecutable("wine"),
-                Arguments = $"\"{GetModdedExePath()}\""
-            };
-            Process x = Process.Start(pro) ?? throw new InvalidOperationException();
-            x.WaitForExit();
-        }
-        else
-        {
-            ProcessStartInfo pro = new ProcessStartInfo
-            {
-                FileName = GetModdedExePath()
-            };
-            Process x = Process.Start(pro) ?? throw new InvalidOperationException();
-            x.WaitForExit();
-        }
+        MoveVanillaExeBack();
+    }
+
+    private static void MoveVanillaAndModdedExe()
+    {
+        File.Move(GetGameConfig().ExecutablePath!, GetVanillaExePath());
+        File.Move(GetModdedExePath(), GetGameConfig().ExecutablePath!);
+    }
+
+    private static void MoveVanillaExeBack()
+    {
+        if (!File.Exists(GetVanillaExePath())) return;
+        File.Move(GetVanillaExePath(), GetGameConfig().ExecutablePath!, true);
     }
 
     private static string GetModdedExePath()
     {
         string executablePath = GetGameConfig().ExecutablePath ?? throw new InvalidOperationException();
 
-        return $"{executablePath.Substring(0, executablePath.Length - 4)}_mod.exe";
+        return $"{executablePath[..^4]}_mod.exe";
+    }
+    
+    private static string GetVanillaExePath()
+    {
+        string executablePath = GetGameConfig().ExecutablePath ?? throw new InvalidOperationException();
+
+        return $"{executablePath[..^4]}_vanilla.exe";
     }
 
     public static Task PatchExecutableAsync()
@@ -436,6 +464,8 @@ public class Utils
     public static void PatchExecutable()
     {
         Mods.PreparePatchDirectory();
+        MoveVanillaExeBack(); // this only runs if _vanilla.exe exists, this is here in case the program isn't able to
+                              // move them back after the game exists (for example, in case of force quit)
         
         string executablePath = GetGameConfig().ExecutablePath ?? throw new InvalidOperationException();
         string patchPath = Path.Combine(Instance._installPath, "patch");
@@ -465,6 +495,8 @@ public class Utils
         };
         Process x = Process.Start(pro) ?? throw new InvalidOperationException();
         x.WaitForExit();
+        // ok so we patched the modded exe, now we move the vanilla exe to _vanilla.exe and modded exe to normal name
+        MoveVanillaAndModdedExe();
         
         // Directory.SetCurrentDirectory(oldWorkingDirectory);
     }

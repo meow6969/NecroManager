@@ -234,7 +234,6 @@ public static class CommandInterface
         Utils.PatchExecutable();
         Console.WriteLine("Starting!");
         Utils.SetReadyToStart();
-        Utils.StartGame();
     }
 
     private static void SetDirectoryCommand(string[] args)

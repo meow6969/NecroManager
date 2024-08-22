@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace NecroManager;
+﻿namespace NecroManager;
 
 internal static class Program
 {
@@ -10,11 +7,13 @@ internal static class Program
         if (args.Length == 0)
         {
             GUI.UserInterface(args);
-            Utils.StartGame();
         }
         else
         {
             CommandInterface.Commands(args);
         }
+        
+        // this only starts the game if Utils.Instance._startGame is set to true
+        Utils.StartGame();
     }
 }
