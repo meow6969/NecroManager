@@ -509,7 +509,7 @@ public class Utils
             System.Threading.Thread.Sleep(10000);
             
             // starting game with steam means x.WaitForExit() exits early, so we need to check for the game
-            if (Process.GetProcessesByName(GetGameExeName()).Length > 0)
+            while (Process.GetProcessesByName(GetGameExeName()).Length > 0)
             {
                 System.Threading.Thread.Sleep(2000);
             }
