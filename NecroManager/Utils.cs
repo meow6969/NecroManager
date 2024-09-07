@@ -505,13 +505,15 @@ public class Utils
         if (!File.Exists(GetVanillaExePath())) return;
         if (GetGameConfig().SteamEnabled && Instance._startGame)
         {
-            // game doesnt start immediately, so we need to wait first
-            System.Threading.Thread.Sleep(10000);
-
             string gameExe;
             if (IsUnix()) gameExe = GetGameExeName();
             else gameExe = GetGameExeName()[..(GetGameExeName().Length - 4)]; // on windows the .exe is truncated
             
+            // game doesnt start immediately, so we need to wait for it to start
+            while (Process.GetProcessesByName(gameExe).Length == 0)
+            {
+                System.Threading.Thread.Sleep(2000);
+            }
             // starting game with steam means x.WaitForExit() exits early, so we need to check for the game
             while (Process.GetProcessesByName(gameExe).Length > 0)
             {
